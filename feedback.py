@@ -63,6 +63,9 @@ def get_prof(csv_data):
 def get_lab(csv_data):
 	return get_uniq_elem_at_column(csv_data, 1)
 
+def empty_row(csv_data):
+	return [""] * len(get_header(csv_data))
+
 def get_stats(text, csv_data, f):
 	# titular, asistent
 	row = [text, len(csv_data)]
@@ -72,6 +75,8 @@ def get_stats(text, csv_data, f):
 	row.append(f(csv_data, int, 3))
 	# nota asteptata
 	row.append(f(csv_data, get_nota, 4))
+	# incarcare
+	row.append("")
 	# prezenta curs
 	row.append(f(csv_data, int, 6))
 	# prezenta lab
@@ -109,9 +114,6 @@ def get_stats(text, csv_data, f):
 	# indepl ob
 	row.append(f(csv_data, int, 23))
 	return row
-
-def empty_row(csv_data):
-	return [""] * len(get_header(csv_data))
 
 def filter_stats(f, f_id, csv_data, writer):
 	p = f(csv_data)
