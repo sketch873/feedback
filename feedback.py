@@ -24,6 +24,11 @@ def get_nota(s):
 		return 4
 	return int(s)
 
+def get_load(s):
+	if s == "DA":
+		return 2
+	return 1
+
 def get_uniq_elem_at_column(csv_data, c):
 	uniq = set([])
 	for line in csv_data:
@@ -76,7 +81,7 @@ def get_stats(text, csv_data, f):
 	# nota asteptata
 	row.append(f(csv_data, get_nota, 4))
 	# incarcare
-	row.append("")
+	row.append(f(csv_data, get_load, 5))
 	# prezenta curs
 	row.append(f(csv_data, int, 6))
 	# prezenta lab
