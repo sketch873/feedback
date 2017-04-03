@@ -26,33 +26,35 @@ def get_nota(s):
 
 def get_uniq_elem_at_column(csv_data, c):
 	uniq = set([])
-	for line in csv_data[1:]:
+	for line in csv_data:
 		uniq.add(line[c])
 	return list(uniq)
 
 def average_at_column(csv_data, f, c):
 	s = 0
 	num = 0
-	for line in csv_data[1:]:
+	for line in csv_data:
 		s += f(line[c])
 		num += 1.0
 	return round(s/num, 2)
 
 def min_at_column(csv_data, f, c):
-	minimum = f(csv_data[1][c])
-	for line in csv_data[1:]:
+	minimum = f(csv_data[0][c])
+	for line in csv_data:
 		if f(line[c]) < minimum:
 			minimum = f(line[c])
 	return minimum 
 
 def max_at_column(csv_data, f, c):
-	maximum = f(csv_data[1][c])
-	for line in csv_data[1:]:
+	maximum = f(csv_data[0][c])
+	for line in csv_data:
 		if f(line[c]) > maximum:
 			maximum = f(line[c])
 	return maximum
 
 def get_header(csv_data):
+	csv_data[0][0] = "categorie"
+	csv_data[0][1] = "count"
 	return csv_data[0]
 
 def get_prof(csv_data):
@@ -63,7 +65,7 @@ def get_lab(csv_data):
 
 def get_stats(text, csv_data, f):
 	# titular, asistent
-	row = [text, ""]
+	row = [text, len(csv_data)]
 	# nr. ore
 	row.append(f(csv_data, get_h, 2))
 	# eval. gen
@@ -108,6 +110,17 @@ def get_stats(text, csv_data, f):
 	row.append(f(csv_data, int, 23))
 	return row
 
+def empty_row(csv_data):
+	return [""] * len(get_header(csv_data))
+
+def p_stats(csv_data, writer):
+	p = get_prof(csv_data)
+	for e in p:
+		a = [row for row in csv_data if row[0] == e]
+		row = get_stats(e, a, average_at_column)
+		writer.writerow(row)
+		
+
 def gather_data(csv_file):
 	csv_data = []
 	with open(csv_file, 'rb') as csv_fd:
@@ -123,17 +136,19 @@ def gather_data(csv_file):
 
 	writer.writerow(get_header(csv_data))
 
-	p = get_prof(csv_data)
+	row = get_stats("Minim", csv_data[1:], min_at_column)
+	writer.writerow(row)
+
+	row = get_stats("Mediu", csv_data[1:], average_at_column)
+	writer.writerow(row)
+
+	row = get_stats("Maxim", csv_data[1:], max_at_column)
+	writer.writerow(row)
+
+	p_stats(csv_data[1:], writer)
+	
 	l = get_lab(csv_data)
 
-	row = get_stats("Minim", csv_data, min_at_column)
-	writer.writerow(row)
-
-	row = get_stats("Mediu", csv_data, average_at_column)
-	writer.writerow(row)
-
-	row = get_stats("Maxim", csv_data, max_at_column)
-	writer.writerow(row)
 
 if len(sys.argv) != 2 or not os.path.isdir(sys.argv[1]):
 	print "Usage: " + sys.argv[0] + " DIR_DATA" 
