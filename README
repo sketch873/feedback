@@ -1,3 +1,4 @@
 1. Run 'xls2csv.sh' to convert .xls to .csv 
 2. Run 'feedback.py'
+3. Run 'csv2xls.sh' to convert .csv to .xls
 
