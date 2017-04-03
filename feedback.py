@@ -113,12 +113,13 @@ def get_stats(text, csv_data, f):
 def empty_row(csv_data):
 	return [""] * len(get_header(csv_data))
 
-def p_stats(csv_data, writer):
-	p = get_prof(csv_data)
+def filter_stats(f, f_id, csv_data, writer):
+	p = f(csv_data)
 	for e in p:
-		a = [row for row in csv_data if row[0] == e]
+		a = [row for row in csv_data if row[f_id] == e]
 		row = get_stats(e, a, average_at_column)
 		writer.writerow(row)
+
 		
 
 def gather_data(csv_file):
@@ -145,11 +146,9 @@ def gather_data(csv_file):
 	row = get_stats("Maxim", csv_data[1:], max_at_column)
 	writer.writerow(row)
 
-	p_stats(csv_data[1:], writer)
+	filter_stats(get_prof, 0, csv_data[1:], writer)
+	filter_stats(get_lab, 1, csv_data[1:], writer)
 	
-	l = get_lab(csv_data)
-
-
 if len(sys.argv) != 2 or not os.path.isdir(sys.argv[1]):
 	print "Usage: " + sys.argv[0] + " DIR_DATA" 
 	sys.exit(1)
