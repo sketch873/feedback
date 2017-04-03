@@ -135,6 +135,8 @@ def gather_data(csv_file):
 	csv_result_fd = open(csv_result_file, 'wb')
 	writer = csv.writer(csv_result_fd, quoting=csv.QUOTE_ALL)
 
+	print "Generate results in " + sys.argv[1] + "/" + csv_result_file
+
 	writer.writerow(get_header(csv_data))
 
 	row = get_stats("Minim", csv_data[1:], min_at_column)
