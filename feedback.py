@@ -27,6 +27,8 @@ def get_nota(s):
 def get_load(s):
 	if s == "DA":
 		return 2
+	elif s == "NU":
+		return 0
 	return 1
 
 def get_uniq_elem_at_column(csv_data, c):
