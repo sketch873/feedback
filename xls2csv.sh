@@ -9,7 +9,7 @@ pushd "$1" &> /dev/null
 IFS=$'\n'
 for file in *.xls; do
 	csv_file=$(basename "$file" .xls).csv
-	echo "Convert $file to $csv_file."
+	echo "Convert $file to $csv_file"
 	ssconvert "$file" "$csv_file" &> /dev/null
 done
 popd &> /dev/null
