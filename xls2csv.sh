@@ -1,7 +1,7 @@
 #!/bin/bash
 
 if [ $# -ne 1 ] || [ ! -d "$1" ]; then
-	echo "Usage: $0 DIR_DATA"
+	echo "Usage: $0 DIR_DATA" 1>&2
 	exit 1
 fi
 
