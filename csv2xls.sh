@@ -6,7 +6,8 @@ if [ $# -ne 1 ] || [ ! -d "$1" ]; then
 fi
 
 pushd "$1" &> /dev/null
-for file in $(ls *-prelucrat.csv); do
+IFS=$'\n'
+for file in *-prelucrat.csv; do
 	xls_file=$(basename $file .csv).xls
 	echo "Convert $file to $xls_file."
 	ssconvert "$file" "$xls_file" &> /dev/null
