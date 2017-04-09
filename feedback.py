@@ -60,7 +60,7 @@ def max_at_column(csv_data, f, c):
 def get_header(csv_data):
 	csv_data[0][0] = "categorie"
 	csv_data[0][1] = "count"
-	return csv_data[0]
+	return csv_data[0][:-4]
 
 def get_prof(csv_data):
 	return get_uniq_elem_at_column(csv_data, 0)
