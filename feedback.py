@@ -3,21 +3,32 @@ import sys
 import os
 import csv
 
+
+def get_eval(s):
+	if s == "5 - Complet de Acord":
+		return 5
+	elif s == "4 - ...":
+		return 4
+	elif s == "3 - ...":
+		return 3
+	elif s == "2 - ...":
+		return 2
+	else:
+		return 1;
+
 def get_h(s):
 	# Students can choose between the following options:
-	# 1-3, 4-6, 7-9, 10-12, 13-15, 16+
 	# We will consider the middle value.
-	if s == "1-3":
-		return 2
-	if s == "4-6":
-		return 5
-	if s == "7-9":
-		return 8
-	if s == "10-12":
-		return 11
-	if s == "13-15":
-		return 14
-	return 17
+	if s == "80% .. 100%":
+		return 90
+	elif s == "60% .. 80%":
+		return 70
+        elif s == "40% .. 60%":
+		return 50
+	elif s == "20% .. 40%":
+		return 30
+        else:
+            return 10
 
 def get_nota(s):
 	if s == "sub 5":
@@ -50,7 +61,7 @@ def min_at_column(csv_data, f, c):
 	for line in csv_data:
 		if f(line[c]) < minimum:
 			minimum = f(line[c])
-	return minimum 
+	return minimum
 
 def max_at_column(csv_data, f, c):
 	maximum = f(csv_data[0][c])
@@ -65,10 +76,10 @@ def get_header(csv_data):
 	return csv_data[0][:-4]
 
 def get_prof(csv_data):
-	return get_uniq_elem_at_column(csv_data, 0)
+	return get_uniq_elem_at_column(csv_data, 2)
 
 def get_lab(csv_data):
-	return get_uniq_elem_at_column(csv_data, 1)
+	return get_uniq_elem_at_column(csv_data, 3)
 
 def empty_row(csv_data):
 	return [""] * len(get_header(csv_data))
@@ -76,50 +87,46 @@ def empty_row(csv_data):
 def get_stats(text, csv_data, f):
 	# titular, asistent
 	row = [text, len(csv_data)]
-	# nr. ore
-	row.append(f(csv_data, get_h, 2))
-	# eval. gen
-	row.append(f(csv_data, int, 3))
+
+	row.append("")
+	row.append("")
+	# evaluare generala
+	row.append(f(csv_data, get_eval, 4))
 	# nota asteptata
-	row.append(f(csv_data, get_nota, 4))
-	# incarcare
-	row.append(f(csv_data, get_load, 5))
-	# prezenta curs
-	row.append(f(csv_data, int, 6))
-	# prezenta lab
-	row.append(f(csv_data, int, 7))
-	# preg c
-	row.append(f(csv_data, int, 8))
-	# preg l
-	row.append(f(csv_data, int, 9))
-	# expl clare c
-	row.append(f(csv_data, int, 10))
-	# expl clare l
-	row.append(f(csv_data, int, 11))
-	# rasp clare c
-	row.append(f(csv_data, int, 12))
-	# rasp clare l
-	row.append(f(csv_data, int, 13))
-	# interes c
-	row.append(f(csv_data, int, 14))
-	# interes l
-	row.append(f(csv_data, int, 15))
-	# comport c
-	row.append(f(csv_data, int, 16))
-	# comport l
-	row.append(f(csv_data, int, 17))
-	# expl supl c
-	row.append(f(csv_data, int, 18))
-	# expl supl l
-	row.append(f(csv_data, int, 19))
-	# materiale c
-	row.append(f(csv_data, int, 20))
-	# materiale l
-	row.append(f(csv_data, int, 21))
-	# nr teme
-	row.append(f(csv_data, int, 22))
-	# indepl ob
-	row.append(f(csv_data, int, 23))
+	row.append(f(csv_data, float, 5))
+	# incarcarea generala
+	row.append(f(csv_data, get_eval, 6))
+	# dotare locatie
+	row.append(f(csv_data, get_eval, 7))
+	# participare
+	row.append(f(csv_data, get_h, 8))
+	# cadrul didactic stapaneste
+	row.append(f(csv_data, get_eval, 9))
+	# metoda de expunere
+	row.append(f(csv_data, get_eval, 10))
+	# cursul a stimulat
+	row.append(f(csv_data, get_eval, 11))
+	# comportament cadru didactic
+	row.append(f(csv_data, get_eval, 12))
+	# materialele didactice suficiente pentru curs
+	row.append(f(csv_data, get_eval, 13))
+	# cadrul didactic stapaneste
+	row.append(f(csv_data, get_eval, 14))
+	# cadrul didactic sustine activitatea individuala
+	row.append(f(csv_data, get_eval, 15))
+	# cadrul didactic a raspuns intrebarilor
+	row.append(f(csv_data, get_eval, 16))
+	# comportament adecvat
+	row.append(f(csv_data, get_eval, 17))
+	# materiale didactice suficiente pentru aplicatii
+	row.append(f(csv_data, get_eval, 18))
+	# nr. ore saptamana pt teme
+	row.append(f(csv_data, float, 19))
+	# nr. + dificultate teme
+	row.append(f(csv_data, get_eval, 20))
+	# temele au ajutat la intelegerea materiei
+	row.append(f(csv_data, get_eval, 21))
+
 	return row
 
 def filter_stats(f, f_id, csv_data, writer):
@@ -129,7 +136,7 @@ def filter_stats(f, f_id, csv_data, writer):
 		row = get_stats(e, a, average_at_column)
 		writer.writerow(row)
 
-		
+
 
 def gather_data(csv_file):
 	csv_data = []
@@ -157,11 +164,11 @@ def gather_data(csv_file):
 	row = get_stats("Maxim", csv_data[1:], max_at_column)
 	writer.writerow(row)
 
-	filter_stats(get_prof, 0, csv_data[1:], writer)
-	filter_stats(get_lab, 1, csv_data[1:], writer)
-	
+	filter_stats(get_prof, 2, csv_data[1:], writer)
+	filter_stats(get_lab, 3, csv_data[1:], writer)
+
 if len(sys.argv) != 2 or not os.path.isdir(sys.argv[1]):
-	print "Usage: " + sys.argv[0] + " DIR_DATA" 
+	print "Usage: " + sys.argv[0] + " DIR_DATA"
 	sys.exit(1)
 os.chdir(sys.argv[1])
 
